@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="default" name="opfx" xmlns:ac="antlib:net.sf.antcontrib"  xmlns:php="antlib:org.opfx.ant.php">
+	<property environment="env"/>
+	<path id="classpath.tool">
+		<fileset dir="${basedir}/build/tool">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<typedef resource="net/sf/antcontrib/antlib.xml" uri="antlib:net.sf.antcontrib"	classpathref="classpath.tool"/>
+	
+	<typedef resource="org/opfx/ant/php/antlib.xml" uri="antlib:org.opfx.ant.php" classpathref="classpath.tool"/>
+
+	<property name="php.home" location="O:\work\tool\eclipse\.p2\pool\plugins\com.zend.php.executables.windows_7.1.3.201703171134\resources"/>
+	
+	<property name="src.dir" location="${basedir}/src"/>
+	<property name="dist.dir" location="${basedir}/dist"/>
+	<property name="target.dir" location="${basedir}/target"/>
+	<property name="bin.dir" location="${target.dir}/bin"/>
+	
+	<property name="main.src.dir" location="${src.dir}/main/php"/>
+	<property name="generated.src.dir" location="${target.dir}/src"/>
+	
+	
+	<target name="init">
+		
+	</target>
+	
+	<target name="generate-sources">
+		<php:stub basedir="${main.src.dir}" template="${main.src.dir}/stub.php" destfile="${generated.src.dir}/stub.php"/>		
+	</target>
+	
+	<target name="lint" depends="generate-sources">		
+		<php:lint srcdir="${main.src.dir}" destdir="${bin.dir}" excludes="**/stub.php">
+			<fileset dir="${generated.src.dir}"/>
+		</php:lint>
+		
+	</target>
+	
+	<target name="phar" depends="lint">
+		<php:phar basedir="${bin.dir}" destfile="${dist.dir}/${ant.project.name}.phar" />
+	</target>
+	
+	
+	<target name="default" depends="phar"/>
+	<target name="clean" depends="init"/>
+</project>
