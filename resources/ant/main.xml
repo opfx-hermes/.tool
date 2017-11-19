@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="default" name="main" xmlns:ac="antlib:net.sf.antcontrib"  xmlns:php="antlib:org.opfx.ant.php">
+<project basedir="." default="default" name="main" xmlns:ac="antlib:net.sf.antcontrib"  xmlns:php="antlib:org.opfx.ant.php" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<dirname property='tool.home' file="${ant.file.base}" />
 	<path id="classpath.tool">
 		<fileset dir="${tool.home}/resources/jar">
@@ -20,10 +20,12 @@
 	
 	
 	<target name="init">
-		
+		<ivy:settings file="${tool.home}/resources/etc/ivy/settings.xml"/>
+		<ivy:resolve file='${basedir}/ivy/module.xml'/>
+		<ivy:deliver deliverpattern="${basedir}/dist/ivy.xml"/>
 	</target>
 	
-	<target name="generate-sources">
+	<target name="generate-sources" depends="init">
 		<!--
 		<php:stub basedir="${main.src.dir}" template="${main.src.dir}/stub.php" destfile="${generated.src.dir}/stub.php"/>
 		-->		
@@ -35,6 +37,7 @@
 	
 	<target name="phar" depends="lint">
 		<php:phar basedir="${bin.dir}" destfile="${dist.dir}/${ant.project.name}.phar" />
+		
 	</target>
 	
 	

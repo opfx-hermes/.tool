@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ivysettings>
+<ivysettings>
+	<property name="ivy.workspace.repo.root" value="${ivy.settings.dir}/../../../../" override="false"/>
+	<property name="ivy.workspace.metadata.pattern" value="[module]/dist/ivy.xml" override="false"/>
+	<property name="ivy.workspace.artifact.pattern" value="[module]/dist/[artifact](-[classifier]).[ext]" override="false"/>
+	<!-- SETTINGS			-->
+	
+	<settings  defaultResolver="eclipse" />
+	<!-- CLASSPATH			-->
+	<classpath file="${ivy.settings.dir}/../../jar/ivy-util.jar"/>
+	
+	<!-- TYPEDEF			-->
+	<typedef name="unpackage" classname="com.ganz.ivy.trigger.Unpackage"/>
+	<typedef name="workspace" classname="com.ganz.ivy.eclipse.WorkspaceResolver"/>
+
+	
+	<!-- VERSION-MATCHERS	-->
+	<!-- TRIGGERS			-->
+	<triggers>
+		<unpackage event="pre-download-artifact"/>
+		<unpackage event="pre-retrieve-artifact"/>
+	</triggers>
+	<!-- PARSERS			-->
+	<!-- CONFLICT-MANAGERS	-->
+	<!-- OUTPUTTERS			-->
+	
+	
+	<!-- RESOLVERS			-->
+	<resolvers>
+		<workspace name="workspace" force="true">
+			<ivy pattern="${ivy.workspace.repo.root}${ivy.workspace.metadata.pattern}"/>
+			<artifact pattern="${ivy.workspace.repo.root}${ivy.workspace.artifact.pattern}"/>
+		</workspace>
+		<chain name="eclipse">
+			<resolver ref="workspace"/>						
+		</chain>
+		
+  	
+	    
+	</resolvers>
+
+</ivysettings>
