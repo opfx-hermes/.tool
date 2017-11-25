@@ -35,12 +35,12 @@
 		<php:lint srcdir="${main.src.dir}" destdir="${bin.dir}"/>
 	</target>
 	
-	<target name="phar" depends="lint">
+	<target name="package" depends="lint">
 		<php:phar basedir="${bin.dir}" destfile="${dist.dir}/${ant.project.name}.phar" />
 		
 	</target>
 	
 	
-	<target name="default" depends="phar"/>
+	<target name="default" depends="package"/>
 	<target name="clean" depends="init"/>
 </project>
