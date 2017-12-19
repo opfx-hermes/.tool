@@ -1,46 +1,55 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="default" name="main" xmlns:ac="antlib:net.sf.antcontrib"  xmlns:php="antlib:org.opfx.ant.php" xmlns:ivy="antlib:org.apache.ivy.ant">
-	<dirname property='tool.home' file="${ant.file.base}" />
-	<path id="classpath.tool">
-		<fileset dir="${tool.home}/resources/jar">
-			<include name="*.jar"/>
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<project basedir='.' default='default' name='main' xmlns:ac='antlib:net.sf.antcontrib'  xmlns:php='antlib:org.opfx.ant.php' xmlns:ivy='antlib:org.apache.ivy.ant'>
+	<dirname property='tool.home' file='${ant.file.base}' />
+	<path id='classpath.tool'>
+		<fileset dir='${tool.home}/resources/jar'>
+			<include name='*.jar'/>
 		</fileset>
 	</path>
 	
-	<typedef resource="net/sf/antcontrib/antlib.xml" uri="antlib:net.sf.antcontrib"	classpathref="classpath.tool"/>
-	<typedef resource="org/opfx/ant/php/antlib.xml" uri="antlib:org.opfx.ant.php" classpathref="classpath.tool"/>
+	<import file='site.xml'/>
+	
+	<typedef resource='net/sf/antcontrib/antlib.xml' uri='antlib:net.sf.antcontrib'	classpathref='classpath.tool'/>
+	<typedef resource='org/opfx/ant/php/antlib.xml' uri='antlib:org.opfx.ant.php' classpathref='classpath.tool'/>
 
-	<property name="src.dir" location="${basedir}/src"/>
-	<property name="dist.dir" location="${basedir}/dist"/>
-	<property name="target.dir" location="${basedir}/target"/>
-	<property name="bin.dir" location="${target.dir}/bin"/>
+	<property name='src.dir' location='${basedir}/src'/>
+	<property name='dist.dir' location='${basedir}/dist'/>
+	<property name='target.dir' location='${basedir}/target'/>
+	<property name='bin.dir' location='${target.dir}/bin'/>
 	
-	<property name="main.src.dir" location="${src.dir}/main/php"/>
-	<property name="generated.src.dir" location="${target.dir}/src"/>
+	<property name='main.src.dir' location='${src.dir}/main/php'/>
+	<property name='generated.src.dir' location='${target.dir}/src'/>
 	
+	<target name='info'>
+		<ivy:settings file='${tool.home}/resources/etc/ivy/settings.xml'/>
+		<ivy:info file='${basedir}/ivy/module.xml' property='module.info'/>
+		
+	</target>	
 	
-	<target name="init">
-		<ivy:settings file="${tool.home}/resources/etc/ivy/settings.xml"/>
+	<extension-point name='xp-init' depends='info'/>
+	
+	<target name='init' depends='xp-init'>
 		<ivy:resolve file='${basedir}/ivy/module.xml'/>
-		<ivy:deliver deliverpattern="${basedir}/dist/ivy.xml"/>
+		<ivy:deliver deliverpattern='${basedir}/dist/ivy.xml'/>
 	</target>
 	
-	<target name="generate-sources" depends="init">
+	<target name='generate-sources' depends='init'>
 		<!--
-		<php:stub basedir="${main.src.dir}" template="${main.src.dir}/stub.php" destfile="${generated.src.dir}/stub.php"/>
+		<php:stub basedir='${main.src.dir}' template='${main.src.dir}/stub.php' destfile='${generated.src.dir}/stub.php'/>
 		-->		
 	</target>
 	
-	<target name="lint" depends="generate-sources">		
-		<php:lint srcdir="${main.src.dir}" destdir="${bin.dir}"/>
+	<target name='lint' depends='generate-sources'>		
+		<php:lint srcdir='${main.src.dir}' destdir='${bin.dir}'/>
 	</target>
 	
-	<target name="package" depends="lint">
-		<php:phar basedir="${bin.dir}" destfile="${dist.dir}/${ant.project.name}.phar" />
-		
+
+	<target name='package' depends='lint' unless='package.skip'>
+		<php:phar basedir='${bin.dir}' destfile='${dist.dir}/${ant.project.name}.phar' />
+		 
 	</target>
 	
 	
-	<target name="default" depends="package"/>
-	<target name="clean" depends="init"/>
+	<target name='default' depends='package'/>
+	<target name='clean' depends='init'/>
 </project>

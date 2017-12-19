@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<project basedir='.'  name='site' xmlns:ac='antlib:net.sf.antcontrib'  xmlns:php='antlib:org.opfx.ant.php' xmlns:ivy='antlib:org.apache.ivy.ant'>
+	<target name='init' extensionOf='xp-init' if='module.kind.site'>
+		
+	</target>
+</project>
